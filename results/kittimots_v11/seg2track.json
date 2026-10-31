@@ -1,0 +1,282 @@
+{
+ "tracker": "seg2track",
+ "run": "kittimots_v11",
+ "source": "kittimots",
+ "split": "val",
+ "detections": {
+  "version": "v11"
+ },
+ "sam2_size": "l",
+ "seg2track_params": {
+  "detection_threshold": 0.5,
+  "addition_threshold": {
+   "1": 0.6,
+   "2": 0.85
+  },
+  "removal_threshold": 0.1,
+  "removal_tries": 5,
+  "reprompt_threshold": 0.7,
+  "removal_bool": false,
+  "reprompt_bool": false,
+  "dataset_type": "KITTI",
+  "detection_type": "KITTI",
+  "save_images": false,
+  "output_tag": "v11_l"
+ },
+ "npz_layout": {
+  "0002": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.56,
+    "1": 2.98
+   },
+   "clipped": 0,
+   "dropped": 0
+  },
+  "0006": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.68,
+    "1": 1.5
+   },
+   "clipped": 0,
+   "dropped": 0
+  },
+  "0007": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.81,
+    "1": 2.79
+   },
+   "clipped": 0,
+   "dropped": 0
+  },
+  "0008": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.79,
+    "1": 3.15
+   },
+   "clipped": 0,
+   "dropped": 0
+  },
+  "0010": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.85,
+    "1": 1.27
+   },
+   "clipped": 0,
+   "dropped": 0
+  },
+  "0013": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.56,
+    "1": 3.04
+   },
+   "clipped": 0,
+   "dropped": 0
+  },
+  "0014": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.81,
+    "1": 2.48
+   },
+   "clipped": 0,
+   "dropped": 0
+  },
+  "0016": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.47,
+    "1": 3.04
+   },
+   "clipped": 0,
+   "dropped": 0
+  },
+  "0018": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.82,
+    "1": 2.44
+   },
+   "clipped": 0,
+   "dropped": 0
+  }
+ },
+ "tracker_ms": {
+  "median": 705.4344179805435,
+  "p95": 705.4344179805435,
+  "frames": 2981,
+  "note": "mean wall time per frame (GPU)"
+ },
+ "detector_ms": {
+  "median": 6.396492004394531,
+  "p95": 6.537319183349609
+ },
+ "reid_ms": null,
+ "score_thr": null,
+ "causal_check": null,
+ "per_class": {
+  "car": {
+   "HOTA": 0.6370594192979204,
+   "DetA": 0.586348951897249,
+   "AssA": 0.6934662682118117,
+   "LocA": 0.9116998664661705,
+   "MOTA": 0.5770332544526093,
+   "MOTP": 0.902828387172096,
+   "IDF1": 0.7348206363290658,
+   "IDSW": 12,
+   "Frag": 51,
+   "GT_IDs": null,
+   "CLR_TP": 6197,
+   "CLR_FN": 1832,
+   "CLR_FP": 1552
+  },
+  "pedestrian": {
+   "HOTA": 0.5207883473984951,
+   "DetA": 0.4180049812804877,
+   "AssA": 0.6489544834278518,
+   "LocA": 0.8973929312226234,
+   "MOTA": 0.351359426351957,
+   "MOTP": 0.8876181514698236,
+   "IDF1": 0.6022593154611364,
+   "IDSW": 0,
+   "Frag": 17,
+   "GT_IDs": null,
+   "CLR_TP": 1880,
+   "CLR_FN": 1467,
+   "CLR_FP": 704
+  }
+ },
+ "mean": {
+  "HOTA": 0.5789238833482078,
+  "DetA": 0.5021769665888683,
+  "AssA": 0.6712103758198318,
+  "LocA": 0.9045463988443969,
+  "MOTA": 0.4641963404022832,
+  "MOTP": 0.8952232693209599,
+  "IDF1": 0.6685399758951012,
+  "IDSW": 12,
+  "Frag": 68
+ }
+}

@@ -1,0 +1,264 @@
+{
+ "tracker": "seg2track",
+ "run": "kittimots_centernet",
+ "source": "kittimots",
+ "split": "val",
+ "detections": {
+  "version": "centernet"
+ },
+ "sam2_size": "l",
+ "seg2track_params": {
+  "detection_threshold": 0.5,
+  "addition_threshold": {
+   "1": 0.6,
+   "2": 0.85
+  },
+  "removal_threshold": 0.1,
+  "removal_tries": 5,
+  "reprompt_threshold": 0.7,
+  "removal_bool": false,
+  "reprompt_bool": false,
+  "dataset_type": "KITTI",
+  "detection_type": "KITTI",
+  "save_images": false,
+  "output_tag": "centernet_l"
+ },
+ "npz_layout": {
+  "0002": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.58,
+    "1": 1.91
+   }
+  },
+  "0006": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.71,
+    "1": 1.64
+   }
+  },
+  "0007": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.77,
+    "1": 1.78
+   }
+  },
+  "0008": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.83,
+    "1": 2.34
+   }
+  },
+  "0010": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.77,
+    "1": 0.97
+   }
+  },
+  "0013": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 1.25,
+    "1": 2.37
+   }
+  },
+  "0014": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.76,
+    "1": 2.72
+   }
+  },
+  "0016": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.7,
+    "1": 2.67
+   }
+  },
+  "0018": {
+   "frame": 0,
+   "score": 5,
+   "cls": 6,
+   "box": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "xyxy": true,
+   "class_map": {
+    "0": 1,
+    "1": 2
+   },
+   "hw_ratio": {
+    "0": 0.71,
+    "1": 2.56
+   }
+  }
+ },
+ "tracker_ms": {
+  "median": 593.1231130493123,
+  "p95": 593.1231130493123,
+  "frames": 2981,
+  "note": "mean wall time per frame (GPU)"
+ },
+ "detector_ms": {
+  "median": 7.5157060623168945,
+  "p95": 7.802380084991455
+ },
+ "reid_ms": null,
+ "score_thr": null,
+ "causal_check": null,
+ "per_class": {
+  "car": {
+   "HOTA": 0.5845270999613025,
+   "DetA": 0.5295072586503088,
+   "AssA": 0.6459919604901575,
+   "LocA": 0.922209976094174,
+   "MOTA": 0.4859882924399053,
+   "MOTP": 0.9169665794027909,
+   "IDF1": 0.6529058116232465,
+   "IDSW": 13,
+   "Frag": 28,
+   "GT_IDs": null,
+   "CLR_TP": 5428,
+   "CLR_FN": 2601,
+   "CLR_FP": 1513
+  },
+  "pedestrian": {
+   "HOTA": 0.531310677560184,
+   "DetA": 0.42266598446625386,
+   "AssA": 0.6679109726162445,
+   "LocA": 0.904456437872124,
+   "MOTA": 0.3952793546459516,
+   "MOTP": 0.8953736510023772,
+   "IDF1": 0.6242174923984976,
+   "IDSW": 3,
+   "Frag": 13,
+   "GT_IDs": null,
+   "CLR_TP": 1785,
+   "CLR_FN": 1562,
+   "CLR_FP": 459
+  }
+ },
+ "mean": {
+  "HOTA": 0.5579188887607432,
+  "DetA": 0.4760866215582813,
+  "AssA": 0.656951466553201,
+  "LocA": 0.913333206983149,
+  "MOTA": 0.44063382354292846,
+  "MOTP": 0.9061701152025841,
+  "IDF1": 0.638561652010872,
+  "IDSW": 16,
+  "Frag": 41
+ }
+}
