@@ -8,6 +8,8 @@ KITTI-MOTS for the 25 detectors of the comparison, evaluated at box level like e
   `kitti_example.json` values, image saving off) and the evaluation `tools/mot/eval_seg2track.py`. Seg2Track and its
   modified SAM2 are used as published and are **not redistributed** (no licence file for the Seg2Track code).
 
+> **v1.1.1 (2026-11-08)** - Two defects in `tools/mot/run_seg2track.py` are fixed: the detection class was guessed from the box shape (taller = pedestrian), which swapped the classes on sequences with one class, and the box layout was guessed from the values (x2 > x1 in 99 % of boxes), which read xyxy boxes as xywh when many boxes had zero width. Detection files written by this project are now read in their fixed layout with classes by name; the value-based guess remains only for files without that metadata and is recorded in `run_info.json`. An audit of every run found two affected published results, both on val sequence 0018 only, now re-run and re-evaluated (HOTA): FCOS 0.526 -> 0.585, YOLOv1 0.512 -> 0.571. The other 23 detectors are unchanged.
+
 ### Results (HOTA, KITTI-MOTS val, car / pedestrian mean)
 
 | detector | **Seg2Track-SAM2** HOTA | DetA | AssA | best v1.0 tracker | difference | SAM2 ms / frame |
@@ -16,10 +18,12 @@ KITTI-MOTS for the 25 detectors of the comparison, evaluated at box level like e
 | cascade_rcnn | **0.606** | 0.522 | 0.710 | tracktrack 0.625 | -0.019 | 920 |
 | tood | **0.591** | 0.511 | 0.688 | hybridsort 0.506 | +0.085 | 807 |
 | retinanet | **0.591** | 0.501 | 0.700 | botsort_reid 0.535 | +0.056 | 842 |
+| fcos | **0.585** | 0.505 | 0.682 | botsort_reid 0.493 | +0.092 | 719 |
 | atss | **0.581** | 0.480 | 0.705 | tracktrack 0.527 | +0.054 | 959 |
 | v6 | **0.580** | 0.489 | 0.691 | botsort_reid 0.509 | +0.070 | 864 |
 | v11 | **0.579** | 0.502 | 0.671 | hybridsort 0.435 | +0.144 | 705 |
 | v10 | **0.573** | 0.500 | 0.660 | botsort_reid 0.455 | +0.118 | 689 |
+| v1 | **0.571** | 0.476 | 0.692 | tracktrack 0.374 | +0.197 | 764 |
 | rtmdet | **0.563** | 0.485 | 0.657 | hybridsort 0.465 | +0.098 | 773 |
 | ppyoloe | **0.558** | 0.463 | 0.676 | tracktrack 0.487 | +0.071 | 926 |
 | centernet | **0.558** | 0.476 | 0.657 | hybridsort 0.395 | +0.163 | 593 |
@@ -30,16 +34,14 @@ KITTI-MOTS for the 25 detectors of the comparison, evaluated at box level like e
 | v8 | **0.549** | 0.472 | 0.647 | botsort_reid 0.443 | +0.107 | 671 |
 | v12 | **0.546** | 0.457 | 0.655 | hybridsort 0.424 | +0.122 | 780 |
 | v13 | **0.545** | 0.458 | 0.653 | tracktrack 0.372 | +0.173 | 695 |
-| fcos | **0.526** | 0.415 | 0.667 | botsort_reid 0.493 | +0.033 | 725 |
 | v26 | **0.522** | 0.411 | 0.671 | hybridsort 0.390 | +0.132 | 788 |
 | x | **0.521** | 0.415 | 0.670 | botsort_reid 0.478 | +0.043 | 1050 |
 | libra_rcnn | **0.512** | 0.401 | 0.675 | tracktrack 0.599 | -0.086 | 1294 |
-| v1 | **0.512** | 0.388 | 0.683 | tracktrack 0.374 | +0.138 | 761 |
 | faster_rcnn | **0.504** | 0.364 | 0.700 | tracktrack 0.582 | -0.078 | 1376 |
 | ssd | **0.355** | 0.278 | 0.515 | botsort 0.288 | +0.068 | 628 |
 
-Findings: best tracker on 21 of the 25 detectors and nearly detector-independent (HOTA 0.51-0.61 for 24 detectors,
-against 0.33-0.63 for the best v1.0 tracker) - the v1.0 rule "detector > threshold > tracker" largely stops holding.
+Findings: best tracker on 21 of the 25 detectors and nearly detector-independent (HOTA 0.50-0.61 for 24 detectors,
+against 0.37-0.63 for the best v1.0 tracker) - the v1.0 rule "detector > threshold > tracker" largely stops holding.
 Two caveats: about 1 s per frame (offline use: automatic labelling), and the KITTI-MOTS boxes are mask extents, the
 same definition as Seg2Track's output boxes, which favours it at box level.
 

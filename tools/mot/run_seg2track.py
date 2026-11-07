@@ -2,7 +2,8 @@
 
 - 공식 Seg2Track 코드와 그 안의 수정된 sam2를 그대로 씁니다(PYTHONPATH로 지정, 아래 명령 참고).
 - 설정은 공식 configs/kitti_example.json 값 그대로이고, 이미지 저장만 끕니다.
-- npz 열 순서(frame, box, score, class)는 값으로 자동 판별하고, 판별이 애매하면 멈춥니다.
+- 이 프로젝트의 검출 npz(dump 메타 포함)는 고정 형식 [frame, x1, y1, x2, y2, score, class]로 읽고 class는 이름으로
+  매핑합니다(v1.1.1). 메타가 없는 파일만 값으로 열 순서를 판별하며, 사용한 방식은 run_info.json에 기록됩니다.
 - 시퀀스마다 끝나면 done 표시를 남겨, 끊겨도 다시 실행하면 이어서 합니다.
 출력: ~/mot_logs/seg2track/<det>_<size>/annotations_mot|annotations_mots/Seg2Track/data/<seq>.txt
 """
@@ -32,6 +33,8 @@ ap.add_argument("--mots", default=f"{HOME}/Physical_AI/datasets/KITTI_MOTS")
 ap.add_argument("--s2t", default=f"{HOME}/Physical_AI/refs_mot/Seg2Track-SAM2")
 ap.add_argument("--ckpt-dir", default=f"{HOME}/Physical_AI/refs_mot/sam2/checkpoints")
 ap.add_argument("--out", default=f"{HOME}/mot_logs/seg2track")
+# [Unified] vseg04 (2026-11-02): train-split detections for the threshold sweep (default = the val dumps, as before)
+ap.add_argument("--det-dir", default=f"{HOME}/mot_logs/dets/kittimots")
 a = ap.parse_args()
 
 sys.path.insert(0, os.path.join(a.s2t, "Seg2Track"))
@@ -75,9 +78,18 @@ def infer_layout(arr, nframes):
 
 
 def to_txt(det, seq, nframes, h, w, layout_log):
-    d = np.load(f"{HOME}/mot_logs/dets/kittimots/{det}.npz", allow_pickle=True)
+    d = np.load(f"{a.det_dir}/{det}.npz", allow_pickle=True)
     arr = d[seq].astype(np.float64)
-    fc, sc, cc, bc, xyxy = infer_layout(arr, nframes)
+    if "meta" in d.files:
+        # [Unified] vseg06c (2026-11-06): files written by dump_dets.py / dump_seg_dets.py (they carry "meta") have
+        # the fixed layout [frame, x1, y1, x2, y2, score, class]. The value-based guess below is kept for other files
+        # only: on cascade_rcnn_h10's hold-out dump it took xyxy boxes for xywh (the "> 0.99 of x2 > x1" test failed
+        # on degenerate boxes), which turned every box into x2 + x1 and the run into HOTA 0.13.
+        fc, sc, cc, bc, xyxy = 0, 5, 6, [1, 2, 3, 4], True
+        layout_log.setdefault("_layout_source", "meta (dump format)")
+    else:
+        fc, sc, cc, bc, xyxy = infer_layout(arr, nframes)
+        layout_log.setdefault("_layout_source", "value-based guess")
     b = arr[:, bc].copy()
     if not xyxy:
         b[:, 2:] += b[:, :2]
@@ -91,8 +103,20 @@ def to_txt(det, seq, nframes, h, w, layout_log):
     ks = np.unique(arr[:, cc]).astype(int)
     ratio = {k: np.median((b[arr[:, cc] == k, 3] - b[arr[:, cc] == k, 1]) /
                           np.maximum(b[arr[:, cc] == k, 2] - b[arr[:, cc] == k, 0], 1)) for k in ks}
-    ped = max(ratio, key=ratio.get)
-    cmap = {k: (2 if k == ped else 1) for k in ks}
+    # [Unified] vseg06b (2026-11-06): the class names recorded by dump_dets.py / dump_seg_dets.py decide the mapping.
+    # The aspect-ratio rule below is only the fallback for files without names: per sequence it can swap car and
+    # pedestrian when one class has few or odd boxes (seen on the hold-out dump of cascade_rcnn_h10, HOTA 0.13).
+    try:
+        names = json.loads(str(d["meta"])).get("classes") if "meta" in d.files else None
+    except (ValueError, AttributeError):
+        names = None
+    if names and all(0 <= k < len(names) for k in ks):
+        cmap = {k: (2 if str(names[k]).lower().startswith("ped") else 1) for k in ks}
+        layout_log.setdefault("_class_source", "meta")
+    else:
+        ped = max(ratio, key=ratio.get)
+        cmap = {k: (2 if k == ped else 1) for k in ks}
+        layout_log.setdefault("_class_source", "aspect-ratio fallback")
     layout_log[seq] = dict(frame=fc, score=sc, cls=cc, box=bc, xyxy=bool(xyxy),
                            class_map={int(k): v for k, v in cmap.items()},
                            hw_ratio={int(k): round(float(v), 2) for k, v in ratio.items()},
@@ -111,7 +135,7 @@ predictor = build_sam2_video_predictor(f"configs/sam2.1/sam2.1_hiera_{short}.yam
                                        f"{a.ckpt_dir}/sam2.1_hiera_{long}.pt", device="cuda")
 
 def run_det(det):
-    if not os.path.exists(f"{HOME}/mot_logs/dets/kittimots/{det}.npz"):
+    if not os.path.exists(f"{a.det_dir}/{det}.npz"):
         print(f"SKIP {det}: npz 없음", flush=True)
         return
     tag = f"{det}_{a.size}" + ("" if a.det_thr is None else f"_thr{a.det_thr}")
