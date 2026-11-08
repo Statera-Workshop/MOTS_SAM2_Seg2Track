@@ -1,0 +1,62 @@
+{
+ "cascade_rcnn": {
+  "thr": 0.8,
+  "train_HOTA": 0.5339531319458375,
+  "candidates": [
+   0.6,
+   0.7,
+   0.8,
+   0.9
+  ]
+ },
+ "cascade_mask_rcnn_km": {
+  "thr": 0.9,
+  "train_HOTA": 0.5363023746535681,
+  "candidates": [
+   0.6,
+   0.7,
+   0.8,
+   0.9
+  ]
+ },
+ "faster_rcnn": {
+  "thr": 0.9,
+  "train_HOTA": 0.5055227656461049,
+  "candidates": [
+   0.6,
+   0.7,
+   0.8,
+   0.9
+  ]
+ },
+ "libra_rcnn": {
+  "thr": 0.9,
+  "train_HOTA": 0.49800105486394197,
+  "candidates": [
+   0.6,
+   0.7,
+   0.8,
+   0.9
+  ]
+ },
+ "v11": {
+  "thr": 0.6,
+  "train_HOTA": 0.5175072449919341,
+  "candidates": [
+   0.6,
+   0.7,
+   0.8,
+   0.9
+  ]
+ },
+ "gfl": {
+  "thr": 0.7,
+  "train_HOTA": 0.530025345963821,
+  "candidates": [
+   0.6,
+   0.7,
+   0.8,
+   0.9
+  ]
+ }
+}

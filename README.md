@@ -45,6 +45,42 @@ against 0.37-0.63 for the best v1.0 tracker) - the v1.0 rule "detector > thresho
 Two caveats: about 1 s per frame (offline use: automatic labelling), and the KITTI-MOTS boxes are mask extents, the
 same definition as Seg2Track's output boxes, which favours it at box level.
 
+## Detection threshold and mask-level results (v1.2, 2026-11-08)
+
+The table above is box level at the official detection threshold 0.5. This section adds the **mask level**
+(TrackEval KittiMOTS mask HOTA, `tools/vseg/eval_seg2track_mots.py`, car / pedestrian mean, KITTI-MOTS val) and
+asks whether 0.5 is right. The threshold is chosen in three ways, **never on val**, then evaluated once on val:
+
+- train: Seg2Track on the 12 train sequences with the detector trained on them (`tools/vseg/select_s2t_thr.py`);
+- held-out fold A: detectors retrained with the MOT recipe on 10 train sequences, threshold chosen on the 2 held-out
+  ones (0004 / 0015; `tools/vseg/make_holdout.py`, candidates 0.3-0.95);
+- mean of folds A and B: the same with a second fold (0001 / 0017), best mean of the two (`tools/vseg/select_s2t_cv.py`).
+
+Cells: chosen threshold -> val mask HOTA (false positives, both classes).
+
+| detector | official 0.5 | chosen on train | chosen on held-out fold A | mean of folds A and B |
+| --- | --- | --- | --- | --- |
+| Cascade R-CNN | 0.560 (FP 4,312) | 0.8 -> 0.602 (FP 2,313) | 0.7 -> 0.572 (FP 3,347) | 0.7 -> 0.572 (FP 3,347) |
+| Cascade Mask R-CNN (its detections) | 0.574 (FP 4,300) | 0.9 -> 0.586 (FP 2,203) | 0.8 -> 0.591 (FP 2,556) | - |
+| Faster R-CNN | 0.468 (FP 11,365) | 0.9 -> 0.546 (FP 4,040) | 0.9 -> 0.546 (FP 4,040) | 0.9 -> 0.546 (FP 4,040) |
+| Libra R-CNN | 0.477 (FP 10,286) | 0.9 -> 0.547 (FP 4,567) | 0.8 -> 0.520 (FP 6,227) | 0.95 -> 0.555 (FP 3,487) |
+| GFL | 0.559 (FP 2,545) | 0.7 -> 0.536 (FP 1,219) | 0.4 -> 0.545 (FP 4,220) | 0.5 -> 0.559 (FP 2,545) |
+| YOLO11 | 0.547 (FP 2,166) | 0.6 -> 0.510 (FP 1,967) | 0.3 -> 0.530 (FP 4,191) | 0.4 -> 0.535 (FP 3,212) |
+
+- Two-stage detectors (R-CNN family): every choice beats the official 0.5, by +0.011 to +0.079 mask HOTA; at 0.5 Faster R-CNN, Libra R-CNN produce so many false positives that sMOTSA is negative.
+- One-stage detectors (GFL, YOLO11): no choice beats 0.5 (best change +0.000); keep the official threshold.
+- For the R-CNN family the three choices do not agree on one value, and 0.7 vs 0.8 already moves Cascade R-CNN by 0.030 on val: read 0.7-0.9 as one range, not a precise optimum (each fold has two sequences, 592-690 frames).
+
+The held-out detectors (`*_h10`, `*_h10b`) are study weights and are not published; their recipe is the MOT recipe of
+`Statera-Workshop/MOT_Detectors_KITTIMOTS` on the reduced training list. All result JSONs are in `results_mask/`
+(`val`, `train`, `hold_a`, `hold_b`, with `selected*.json`); `python tools/vseg/thr_compare.py` prints the table.
+
+```bash
+python tools/vseg/eval_seg2track_mots.py --gt-check                    # ground truth as prediction -> HOTA 1.000
+python tools/vseg/eval_seg2track_mots.py --runs cascade_rcnn_l          # mask HOTA of a run_seg2track.py output
+PYTHONPATH=Seg2Track-SAM2/sam2 python tools/mot/run_seg2track.py --size l --dets cascade_rcnn --det-thr 0.8 --s2t Seg2Track-SAM2
+```
+
 ## Usage
 
 ```bash

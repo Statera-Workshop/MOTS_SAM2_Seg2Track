@@ -1,0 +1,11 @@
+{
+ "hold": [
+  "0004",
+  "0015"
+ ],
+ "hold_frames": 690,
+ "hold_fraction": 0.137,
+ "hold_ped_share": 0.316,
+ "train_ped_share": 0.3,
+ "train_frames": 5027
+}
